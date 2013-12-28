@@ -53,7 +53,7 @@
 	var enemies = [];
 	var maxenemy = 40;
 	var enemyindex = 0;
-	var enemytypeupgrade = 1;
+	var enemytypeupgrade = 0;
 
 
 	var explosion = [];
@@ -175,12 +175,12 @@
 	//--------
 	function getenemysrcx( type ) {
 
-		return [4,3,1,0, 9,8,7,6,5,5, 4,3,2,1,0][type];
+		return [4,3,1,0, 9,8,7,6,5,5, 4,3,2,1,0,0][type];
 	}
 
 	function getenemysrcy( type ) {
 
-		return [1,1,1,1, 0,0,0,0,0,1, 0,0,0,0,0][type];
+		return [1,1,1,1, 0,0,0,0,0,1, 0,0,0,0,0,0][type];
 	}
 
 	
@@ -606,7 +606,7 @@
 		
 			release_enemies(15);
 			enemytypeupgrade += 1;
-			
+
 
 		} else if ( tick % 2700 == 0 ) {
 		
@@ -752,7 +752,7 @@
 								bullet_size = max_bullet_size;
 
 							}
-							hyperon = 400;
+							hyperon = 600;
 								
 
 
@@ -762,7 +762,7 @@
 								valdump[2] = autofireinterval;
 								autofireinterval = 3;
 							}
-							autorapidfire = 800;
+							autorapidfire = 1000;
 							
 						}
 
