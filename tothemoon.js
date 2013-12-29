@@ -259,12 +259,12 @@
 	//--------
 	function getenemysrcx( type ) {
 
-		return [4,3,1,0, 9,8,7,6,5,5, 4,3,2,1,0,0][type];
+		return [4,3,1,0, 9,8,7,6,5,5, 4,3,2,1,0,0, 6][type];
 	}
 
 	function getenemysrcy( type ) {
 
-		return [1,1,1,1, 0,0,0,0,0,1, 0,0,0,0,0,0][type];
+		return [1,1,1,1, 0,0,0,0,0,1, 0,0,0,0,0,0, 1][type];
 	}
 
 	
