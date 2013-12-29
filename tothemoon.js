@@ -8,6 +8,8 @@
 	var minspeed = 4;
 	var max_bullet_size = 40;
 	var min_bullet_size = 10;
+	var maxfireinterval = 20;
+	var minfireinterval = 3;
 
 
 	var resource_loaded = 0;
@@ -67,6 +69,83 @@
 	var valdump = [];
 
 
+	//------
+	function addpower( x ) {
+
+		if ( hyperon == 1 ) {
+
+			valdump[1] += x;
+			if ( valdump[1] > max_bullet_size ) {
+				valdump[1] = max_bullet_size;	
+			}
+			if ( valdump[1] < min_bullet_size ) {
+				valdump[1] = min_bullet_size;
+			}
+		} else {
+			
+			
+			bullet_size += x;
+			if ( bullet_size > max_bullet_size ) {
+				bullet_size = max_bullet_size;	
+			}
+			if ( bullet_size < min_bullet_size ) {
+				bullet_size = min_bullet_size;
+			}
+	
+		}					
+	}
+
+
+
+	//---------
+	function addspeed( x ) {
+
+		if ( hyperon == 1 ) {
+
+			valdump[0] += x;
+			if ( valdump[0] > maxspeed ) {
+				valdump[0] = maxspeed;
+			}
+			if ( valdump[0] < minspeed ) {
+				valdump[0] = minspeed;
+			}
+
+		} else {
+			speed += x;
+			if ( speed > maxspeed ) {
+				speed = maxspeed;
+			}
+			if ( speed < minspeed ) {
+				speed = minspeed;
+			}			
+		}
+	}
+
+
+	//----
+	function addrapidfire(x) {
+
+		if ( autorapidfire > 0 ) {
+
+			valdump[2] -= x;
+			if ( valdump[2] > maxfireinterval) {
+				valdump[2] = maxfireinterval;
+			}
+			if ( valdump[2] < minfireinterval ) {
+				valdump[2] = minfireinterval;
+			}
+
+ 		} else {
+ 			autofireinterval -= x;
+			if ( autofireinterval > maxfireinterval) {
+				autofireinterval = maxfireinterval;
+			}
+			if ( autofireinterval < minfireinterval ) {
+				autofireinterval = minfireinterval;
+			}			
+		}
+	}
+
 
 
 	//-----
@@ -104,7 +183,7 @@
 
 		var diffx = bonuses[bi]["x"] - player_x;
 		var diffy = bonuses[bi]["y"] - player_y;
-		if ( diffx * diffx + diffy * diffy < 2304 ) {
+		if ( diffx * diffx + diffy * diffy < 3304 ) {
 			return 1;
 		}
 		return 0;
@@ -117,7 +196,7 @@
 		bonuses[bonusindex]["x"] = x;
 		bonuses[bonusindex]["y"] = y;
 		bonuses[bonusindex]["type"] = type;
-		bonuses[bonusindex]["active"] = 100;
+		bonuses[bonusindex]["active"] = 250;
 
 		bonusindex = (bonusindex + 1) % maxbonus;
 	}
@@ -125,14 +204,14 @@
 
 
 	//---
-	function createenemies( x,y, type) {
+	function createenemies( x,y, type , isboss ) {
 
 		enemies[enemyindex]["x"] = x;
 		enemies[enemyindex]["y"] = y;
 		enemies[enemyindex]["type"] = type;
 		enemies[enemyindex]["active"] = 1;
 		enemies[enemyindex]["tx"] = rand(600);
-
+		enemies[enemyindex]["isboss"] = isboss;
 		enemies[enemyindex]["ty"] = rand(400);
 		
 		if ( type > 13 ) {
@@ -144,6 +223,11 @@
 		} else {
 			enemies[enemyindex]["life"] = type * 8 ;
 		}
+
+		if ( isboss	 == 1 ) {
+			enemies[enemyindex]["life"] *= 10;
+		}
+
 
 			
 		enemyindex = (enemyindex + 1) % maxenemy;
@@ -309,7 +393,9 @@
 	}
 
 
-
+	function int_div( x , y ) {
+		return Math.floor( x / y );
+	}
 
 
 	//----
@@ -444,14 +530,16 @@
 
 		// text
 		if ( autorapidfire > 0 ) {
-			ctxt.fillText( "Rapid Fire : " + autorapidfire , 480, 530);
+			ctxt.fillText( "Rapid Fire : " + autorapidfire , 480, 515);
 		
 		}
 		if ( hyperon > 0 ) {
-			ctxt.fillText( "Hyper Mode : " +  hyperon , 480, 545);
+			ctxt.fillText( "Hyper Mode : " +  hyperon , 480, 530);
 		
 		}
 
+		
+		ctxt.fillText( "Fire Rate : " +  (1000/ autofireinterval).toFixed(2)  , 480, 545);
 		ctxt.fillText( "Power : " +  bullet_size , 480, 560);
 		ctxt.fillText( "Speed : " +  speed  , 480, 575);
 		
@@ -483,15 +571,19 @@
 
 			if ( enemies[i]["active"] == 1 ) {
 				
+				var isboss = enemies[i]["isboss"];
+				var size = isboss? 64 :32  ;
+				var halfsize = size/2 ;
+
 				ctxt.drawImage( imgaltcoin, 
 					getenemysrcx( enemies[i]["type"]) * 64,
 					getenemysrcy( enemies[i]["type"]) * 64,
 					64,
 					64,
-					enemies[i]["x"] - 16, 
-					enemies[i]["y"] - 16, 
-					32,
-					32   );
+					enemies[i]["x"] - halfsize, 
+					enemies[i]["y"] - halfsize, 
+					size,
+					size   );
 
 			}
 		}
@@ -542,7 +634,12 @@
 
 					ctxt.fillStyle = "#ff00bb";
 					ctxt.fillText( "So Auto" , bonuses[i]["x"], bonuses[i]["y"]);
-				}			
+
+				} else if ( bonuses[i]["type"] == 4 ) {
+
+					ctxt.fillStyle = "#ffff00";
+					ctxt.fillText( "Very Rapid" , bonuses[i]["x"], bonuses[i]["y"]);
+				}				
 
 			}
 		}
@@ -612,6 +709,11 @@
 		
 			release_enemies(10);
 
+		} else if ( tick % 2600  == 0 ) {
+
+			//Boss
+			createenemies( rand(600),  rand(20) , enemytypeupgrade , 1) ;
+
 		} else if ( tick % 1800 == 0 ) {
 
 			release_enemies(5);
@@ -621,7 +723,7 @@
 			release_enemies(3);
 
 			if ( enemytypeupgrade < 12 ) {
-				createenemies( rand(600),  rand(20) , rand(3) + enemytypeupgrade ) ;
+				createenemies( rand(600),  rand(20) , rand(3) + enemytypeupgrade , 0) ;
 			}
 
 		} else if( tick % 650 == 0 ) {
@@ -660,12 +762,25 @@
 					if ( enemies[enemy_i]["life"] <= 0 ) {
 						
 						enemies[enemy_i]["active"] = 0;
-						coinval += enemies[enemy_i]["type"] * enemies[enemy_i]["type"] * 5;
+						
+						if (enemies[enemy_i]["isboss"] == 1 ) {
 
-						// give bonus
+							coinval += Math.pow( enemies[enemy_i]["type"], 5 ) * 5 + 40000;
+						
+						} else {
+							coinval += Math.pow( enemies[enemy_i]["type"], 3 ) * 5 + 10000;
+						
+						}
+
+						// reward bonus
 						if ( rand(10) < 4 ) { 
+							
 							createbonuses( bullets[i]["x"], bullets[i]["y"], rand(2) );
-						} else if ( rand(20) < 1 ) { 
+						
+						} else if ( rand(25) < 1 ) { 
+							createbonuses( bullets[i]["x"], bullets[i]["y"], 4 );
+						
+						} else if ( rand(30) < 1 ) { 
 							createbonuses( bullets[i]["x"], bullets[i]["y"], 2 );
 						
 						} else if ( rand(30) < 1 ) { 
@@ -686,20 +801,17 @@
 
 				// CRASH
 				if ( checkCollisionWithPlayers(i) == 1 ) {
-					coinval = coinval / (enemies[i]["type"] + 1)  ;
+					
+
+					coinval = coinval /  (int_div(enemies[i]["type"],2)  + 1 )  ;
+		
 					createexplosion(player_x, player_y);
 					enemies[i]["active"] = 0;
 				
-					bullet_size -= 2;
-					if ( bullet_size < min_bullet_size ) {
-						bullet_size = min_bullet_size;
-					}
-
-					speed -= 1;
-					if ( speed < minspeed ) {
-						speed = minspeed;
-					}
-
+					addpower(-1);
+					addspeed(-1);
+					addrapidfire(-1);
+					
 
 				}
 
@@ -725,19 +837,19 @@
 				if ( bonuses[i]["active"] > 0 ) {
 					
 					bonuses[i]["active"] -= 1;
+					bonuses[i]["y"] += 2;
 
 					// Eat bonus
 					if ( checkBonusCollisionWithPlayers( i ) == 1 ) {
 
 						if ( bonuses[i]["type"] == 0 ) {
-							if ( speed < maxspeed ) {
-								speed += 1;
-							}
+							
+							addspeed(1);
 						
 						} else if ( bonuses[i]["type"] == 1 ) {
-							if ( bullet_size < max_bullet_size ) {
-								bullet_size += 1;
-							}
+							
+							addpower(1);
+
 						
 						} else if ( bonuses[i]["type"] == 2 ) {
 							
@@ -764,7 +876,12 @@
 							}
 							autorapidfire = 1000;
 							
-						}
+						
+						} else if ( bonuses[i]["type"] == 4 ) {
+							
+							addrapidfire(1);
+
+						} 
 
 						
 						bonuses[i]["active"] = 0;
@@ -824,7 +941,7 @@
 				enemytype = rand(15);
 			}
 
-			createenemies( rand(600), 0 , enemytype ) ;
+			createenemies( rand(600), 0 , enemytype , 0 ) ;
 			
 		}
 
