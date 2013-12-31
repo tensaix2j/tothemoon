@@ -213,7 +213,9 @@
 		enemies[enemyindex]["tx"] = rand(600);
 		enemies[enemyindex]["isboss"] = isboss;
 		enemies[enemyindex]["ty"] = rand(400);
+		enemies[enemyindex]["frame"] = 0;
 		
+
 		if ( type > 13 ) {
 			enemies[enemyindex]["life"] = type * 11 ;
 		} else if ( type > 10 ) {
@@ -226,7 +228,8 @@
 
 		if ( isboss	 == 1 ) {
 			enemies[enemyindex]["life"] *= 10;
-		}
+		
+		} 
 
 
 			
@@ -259,12 +262,12 @@
 	//--------
 	function getenemysrcx( type ) {
 
-		return [4,3,1,0, 9,8,7,6,5,5, 4,3,2,1,0,0, 6][type];
+		return [4,3,1,0, 9,8,7,6,  5,5,4,3,  2,1,0,0, 6, 0][type];
 	}
 
 	function getenemysrcy( type ) {
 
-		return [1,1,1,1, 0,0,0,0,0,1, 0,0,0,0,0,0, 1][type];
+		return [1,1,1,1, 0,0,0,0,  0,1,0,0,  0,0,0,0, 1, 2][type];
 	}
 
 	
@@ -576,7 +579,7 @@
 				var halfsize = size/2 ;
 
 				ctxt.drawImage( imgaltcoin, 
-					getenemysrcx( enemies[i]["type"]) * 64,
+					(getenemysrcx( enemies[i]["type"]) + enemies[i]["frame"]) * 64,
 					getenemysrcy( enemies[i]["type"]) * 64,
 					64,
 					64,
@@ -585,6 +588,7 @@
 					size,
 					size   );
 
+			
 			}
 		}
 
@@ -702,7 +706,7 @@
 		if ( tick % 3000 == 0 ) {
 		
 			release_enemies(15);
-			enemytypeupgrade += 1;
+			enemytypeupgrade = (enemytypeupgrade + 1) % 16;
 
 
 		} else if ( tick % 2700 == 0 ) {
@@ -733,6 +737,11 @@
 			release_enemies(1);
 	
 		}
+
+		if ( tick % 6666 == 0 ) { 
+			release_nyancat(1);
+		}
+
 
 		// occasional bonus
 		if ( tick % 4000 == 0 ) {
@@ -799,6 +808,10 @@
 				
 				move_enemies(i);
 
+				if ( enemies[i]["type"] == 17 ) {
+					enemies[i]["frame"] = (enemies[i]["frame"] + 1 )% 6;
+				}
+				
 				// CRASH
 				if ( checkCollisionWithPlayers(i) == 1 ) {
 					
@@ -946,4 +959,18 @@
 		}
 
 	}
+
+	function release_nyancat( n ) { 
+
+		for ( var i = 0 ; i < n && i < maxenemy; i++ ) {
+
+			createenemies( 0, rand(400) , 17 , 1 ) ;
+			var nyancatindex = (enemyindex + maxenemy) % maxenemy - 1;
+			enemies[nyancatindex]["ty"] = enemies[nyancatindex]["y"];
+			enemies[nyancatindex]["tx"] = 680;
+
+		}
+	}
+
+
 
