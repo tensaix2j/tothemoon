@@ -706,7 +706,7 @@
 		if ( tick % 3000 == 0 ) {
 		
 			release_enemies(15);
-			enemytypeupgrade = (enemytypeupgrade + 1) % 16;
+			enemytypeupgrade = (enemytypeupgrade + 1) % 17;
 
 
 		} else if ( tick % 2700 == 0 ) {
