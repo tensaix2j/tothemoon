@@ -612,7 +612,7 @@
 
 
 		
-  		ctxt.font = "14px Helvetica";
+  		ctxt.font = "14px Comic Sans MS";
   		
 
 		for ( i = 0 ; i < maxbonus ; i++ ) {
@@ -649,7 +649,7 @@
 		}
 
 		ctxt.fillStyle = "white";
-  		ctxt.font = "12px Helvetica";
+  		ctxt.font = "12px Comic Sans MS";
   			
 
 	}
