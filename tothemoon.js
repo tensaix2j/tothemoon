@@ -34,7 +34,7 @@
 			this.bullets = [];
 			this.maxbullet = 200;
 			this.enemies = [];
-			this.maxenemy = 40;
+			this.maxenemy = 100;
 			this.explosion = [];
 			this.maxexplosion = 100;
 			this.explosionindex = 0;
