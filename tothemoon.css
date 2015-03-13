@@ -1,0 +1,26 @@
+body {
+
+	background-color: #000000;
+
+	background: -webkit-linear-gradient(#222222, #000000); 
+  	
+}
+
+#main {
+	text-align: center;
+}
+
+#cv{
+	background-color: #000000;
+}
+
+.info {
+	color:#fff;
+	font-size:10px;
+	font-family:Comic Sans MS;
+}
+.googlead {
+    margin: 20px;
+    text-align: center;
+}
+
