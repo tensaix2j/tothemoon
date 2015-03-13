@@ -4,9 +4,10 @@
 
 	function ToTheMoon() {
 
-		var ttm = this;
-		//-------------------------
 		this.init = function() {
+
+			var ttm = this;
+		
 
 			if (window.top !== window.self) { 
 				window.top.location.replace(window.self.location.href);
