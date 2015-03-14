@@ -1334,10 +1334,12 @@
 			this.ctxt.fillText( "Power : " +  this.bullet_size ,   this.canvas.width - 120, this.canvas.height - 40);
 			this.ctxt.fillText( "Speed : " +  this.speed  ,   this.canvas.width - 120, this.canvas.height - 25);
 			
-			if ( this.coinval < this.winningcriteria ) {
-				this.ctxt.fillText( "$ : " +  ( this.coinval / 10000000.0 ).toFixed(8) ,  this.canvas.width - 120, this.canvas.height - 10);
-			} else {
-				this.ctxt.fillText( "You won. You can stop anytime now! "  ,   this.canvas.width - 250, this.canvas.height - 10);
+			if ( this.player.hp > 0 ) {
+				if ( this.coinval < this.winningcriteria ) {
+					this.ctxt.fillText( "$ : " +  ( this.coinval / 10000000.0 ).toFixed(8) ,  this.canvas.width - 120, this.canvas.height - 10);
+				} else {
+					this.ctxt.fillText( "You won. You can stop anytime now! "  ,   this.canvas.width - 250, this.canvas.height - 10);
+				}
 			}
 
 		
