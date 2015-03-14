@@ -13,11 +13,12 @@
 				window.top.location.replace(window.self.location.href);
 			}
 
-			this.max_speed = 40;
-			this.minspeed = 4;
-			
-			this.max_bullet_size = 40;
+			this.max_speed 	= 50;
+			this.minspeed 	= 10;
+			this.max_bullet_size = 50;
 			this.min_bullet_size = 10;
+			
+
 			this.maxfireinterval = 20;
 			this.minfireinterval = 3;
 			this.bullet_forwardspeed = 20;
@@ -124,7 +125,7 @@
 	  		this.ctxt.font 			= "12px Helvetica";
 
 	  		for ( i = 0 ; i < this.maxbullet ; i++ ) {
-	  			this.bullets[i] = { x : 0 , y : 0 , active: 0, owner: 0 , vx:0, vy:0 , size: this.min_bullet_size};
+	  			this.bullets[i] = { x : 0 , y : 0 , active: 0, owner: 0 , vx:0, vy:0 , size: this.min_bullet_size, damage: 2 };
 	  		}
 
 	  		for ( i = 0 ; i < this.maxenemy ; i++ ) {
@@ -392,7 +393,7 @@
 								
 								} 
 
-								if ( this.rand( this.player.hp ) < 1 ) { 
+								if ( this.rand( this.player.hp * 5 ) < 1 ) { 
 									this.createbonuses( this.bullets[i].x, this.bullets[i].y, 5 );
 								}
 							}
@@ -416,7 +417,7 @@
 						} else if ( this.checkBulletCollisionWithPlayer(i)  ) {
 							
 							this.createexplosion( this.player.x , this.player.y );
-							this.player_take_hit( 2 );
+							this.player_take_hit( this.bullets[i].damage );
 							this.bullets[i].active = 0;
 						
 						}	
@@ -447,8 +448,9 @@
 
 						this.createexplosion(this.player.x, this.player.y);
 						this.enemies[i].active = 0;
-						this.addpower(-1);
-						this.addspeed(-1);
+						
+						this.addpower(-2);
+						this.addspeed(-2);
 						this.addrapidfire(-1);
 						
 
@@ -486,7 +488,9 @@
 							this.bullets[this.bulletindex].vy = 5 ;
 							this.bullets[this.bulletindex].active = 1;
 							this.bullets[this.bulletindex].owner = 1;
-							this.bullets[this.bulletindex].size = this.min_bullet_size;
+							this.bullets[this.bulletindex].size = this.min_bullet_size + this.enemies[i].type;
+							this.bullets[this.bulletindex].damage = this.enemies[i].type + 1;
+
 							this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 
 							
@@ -506,7 +510,9 @@
 								this.bullets[this.bulletindex].vy = 15 ;
 								this.bullets[this.bulletindex].active = 1;
 								this.bullets[this.bulletindex].owner = 1;
-								this.bullets[this.bulletindex].size = this.min_bullet_size;
+								this.bullets[this.bulletindex].size = this.min_bullet_size + this.enemies[i].type;
+								this.bullets[this.bulletindex].damage = this.enemies[i].type + 2;
+							
 								this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 								
 							}
@@ -529,7 +535,9 @@
 								
 								this.bullets[this.bulletindex].active = 1;
 								this.bullets[this.bulletindex].owner = 1;
-								this.bullets[this.bulletindex].size = this.min_bullet_size;
+								this.bullets[this.bulletindex].size = this.min_bullet_size + this.enemies[i].type;
+								this.bullets[this.bulletindex].damage = this.enemies[i].type + 3;
+							
 								this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 								
 								t += 0.8;
@@ -554,7 +562,9 @@
 								this.bullets[this.bulletindex].vy = 5 ;
 								this.bullets[this.bulletindex].active = 1;
 								this.bullets[this.bulletindex].owner = 1;
-								this.bullets[this.bulletindex].size = this.min_bullet_size;
+								this.bullets[this.bulletindex].size = this.min_bullet_size + this.enemies[i].type;
+								this.bullets[this.bulletindex].damage = this.enemies[i].type + 4;
+							
 								this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 							}
 						} 
@@ -579,7 +589,9 @@
 								
 								this.bullets[this.bulletindex].active = 1;
 								this.bullets[this.bulletindex].owner = 1;
-								this.bullets[this.bulletindex].size = this.min_bullet_size;
+								this.bullets[this.bulletindex].size = this.min_bullet_size + this.enemies[i].type;
+								this.bullets[this.bulletindex].damage = this.enemies[i].type + 5;
+							
 								this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 								
 								t += 0.4;
@@ -604,7 +616,9 @@
 								this.bullets[this.bulletindex].vy = 15 ;
 								this.bullets[this.bulletindex].active = 1;
 								this.bullets[this.bulletindex].owner = 1;
-								this.bullets[this.bulletindex].size = this.min_bullet_size;
+								this.bullets[this.bulletindex].size = this.min_bullet_size + this.enemies[i].type;
+								this.bullets[this.bulletindex].damage = this.enemies[i].type + 6;
+							
 								this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 								
 							}
@@ -628,7 +642,9 @@
 							this.bullets[this.bulletindex].vy = ( this.player.y - this.enemies[i].y ) / 40 ; 
 							this.bullets[this.bulletindex].active = 1;
 							this.bullets[this.bulletindex].owner = 1;
-							this.bullets[this.bulletindex].size = this.min_bullet_size;
+							this.bullets[this.bulletindex].size = this.min_bullet_size + this.enemies[i].type;
+							this.bullets[this.bulletindex].damage = this.enemies[i].type + 7;
+							
 							this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 							
 							
@@ -651,7 +667,9 @@
 							this.bullets[this.bulletindex].vy = 5 ;
 							this.bullets[this.bulletindex].active = 1;
 							this.bullets[this.bulletindex].owner = 1;
-							this.bullets[this.bulletindex].size = this.min_bullet_size;
+							this.bullets[this.bulletindex].size 	= this.min_bullet_size + this.enemies[i].type;
+							this.bullets[this.bulletindex].damage 	= this.enemies[i].type + 8;
+							
 							this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 
 							
@@ -677,7 +695,9 @@
 								
 								this.bullets[this.bulletindex].active = 1;
 								this.bullets[this.bulletindex].owner = 1;
-								this.bullets[this.bulletindex].size = this.min_bullet_size;
+								this.bullets[this.bulletindex].size 	= this.min_bullet_size + this.enemies[i].type;
+								this.bullets[this.bulletindex].damage 	= this.enemies[i].type + 9 ;
+							
 								this.bulletindex = (this.bulletindex + 1) % this.maxbullet ;
 								
 								t += 0.8;
@@ -889,7 +909,7 @@
 			var diffy = this.enemies[ei].y - this.player.y;
 			if ( diffx * diffx + diffy * diffy < 2304 ) {
 
-				this.player_take_hit(   10 + ( this.enemies[ei].type * 1.8 >> 0 )   );
+				this.player_take_hit(   19 + ( this.enemies[ei].type * 5 >> 0 )   );
 
 				return 1;
 			}
@@ -1396,8 +1416,8 @@
 
 			this.player.hp = 100;
 			
-			this.player.x = 300;
-			this.player.y = 500;
+			this.player.x = this.canvas.width/2;
+			this.player.y = this.canvas.height - 100;
 			this.player.vx = 0;
 			this.player.vy = 0;
 
@@ -1408,7 +1428,7 @@
 
 			this.altitude = 0;
 			this.coinval  = 0;
-			this.speed = this.minspeed;
+			this.speed 	= this.minspeed;
 			this.bulletindex = 0;	
 			
 			this.bullet_size = this.min_bullet_size;
